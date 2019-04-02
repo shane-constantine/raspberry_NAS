@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block title %}
+首页测试
+{% endblock %}
+
+{% block header_extends %}
+<script type="text/javascript" language="javascript">
+   		function update() {
+   			$.getJSON("/data/",function(data) {
+                $("#T").html('<span>'+ data[0].T + '</span>');
+                $("#H").html('<span>'+ data[0].H + '</span>');
+
+                $("#CT").html('<span>'+ data[0].CT + '</span>');
+                $("#CU").html('<span>'+ data[0].CU + '</span>');
+
+                $("#DT").html('<span>'+ data[0].DT + '</span>');
+                $("#DU").html('<span>'+ data[0].DU + '</span>');
+                $("#DF").html('<span>'+ data[0].DF + '</span>');
+                $("#DP").html('<span>'+ data[0].DP + '</span>');
+                $("#RT").html('<span>'+ data[0].RT + '</span>');
+                $("#RU").html('<span>'+ data[0].RU + '</span>');
+                $("#RF").html('<span>'+ data[0].RF + '</span>');
+                $("#RP").html('<span>'+ data[0].RP + '</span>');
+   			});
+   		}
+   		function timeDown() {
+   			setTimeout(function() {
+   			    update();
+   			    timeDown();
+   		    }, 1000)
+   		}
+   		$(document).ready(function() {
+   			timeDown()
+        });
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    环境温湿度
+                </div>
+                <div class="panel-body">
+                    <p>
+                        <span>环境温度：</span>
+                        <span id="T">{{ T }}</span>
+                    </p>
+
+                    <p>
+                        <span>环境湿度：</span>
+                        <span id="H">{{ H }}</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    内存使用情况
+                </div>
+                <div class="panel-body">
+                    <p>
+                        <span>内存总量：</span>
+                        <span id="RT">{{ RT }}</span>
+                    </p>
+
+                    <p>
+                        <span>内存使用：</span>
+                        <span id="RU">{{ RU }}</span>
+                    </p>
+
+                    <p>
+                        <span>内存剩余：</span>
+                        <span id="RF">{{ RF }}</span>
+                    </p>
+
+                    <p>
+                        <span>内存百分比：</span>
+                        <span id="RP">{{ RP }}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    CPU使用情况
+                </div>
+                <div class="panel-body">
+                    <p>
+                        <span>CPU温度：</span>
+                        <span id="CT">{{ CT }}</span>
+                    </p>
+
+                    <p>
+                        <span>CPU使用：</span>
+                        <span id="CU">{{ CU }}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    硬盘使用情况
+                </div>
+                <div class="panel-body">
+                    <p>
+                        <span>硬盘总量：</span>
+                        <span id="DT">{{ DT }}</span>
+                    </p>
+
+                    <p>
+                        <span>硬盘使用：</span>
+                        <span id="DU">{{ DU }}</span>
+                    </p>
+
+                    <p>
+                        <span>硬盘剩余：</span>
+                        <span id="DF">{{ DF }}</span>
+                    </p>
+
+                    <p>
+                        <span>硬盘百分比：</span>
+                        <span id="DP">{{ DP }}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <!--<p id="T">环境温度：{{ T }}</p>-->
+    <!--<p id="H">环境湿度：{{ H }}</p>-->
+    <!--<p id="CT">CPU温度：{{ CT }}</p>-->
+    <!--<p id="CU">CPU使用：{{ CU }}</p>-->
+    <!--<p id="DT">硬盘总量：{{ CU }}</p>-->
+    <!--<p id="DU">硬盘使用：{{ CU }}</p>-->
+    <!--<p id="DF">硬盘剩余：{{ CU }}</p>-->
+    <!--<p id="DP">硬盘百分比：{{ CU }}</p>-->
+    <!--<p id="RT">内存总量：{{ CU }}</p>-->
+    <!--<p id="RU">内存使用：{{ CU }}</p>-->
+    <!--<p id="RF">内存剩余：{{ CU }}</p>-->
+    <!--<p id="RP">内存百分比：{{ CU }}</p>-->
+
+{% endblock%}
