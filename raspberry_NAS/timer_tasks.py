@@ -41,12 +41,7 @@ def getDisk():
     return DISK
 
 def get_data():
-    try:
-        data = ras_info.objects.all()[0]
-    except:
-        data = ras_info()
-        data.save()
-        data = ras_info.objects.all()[0]
+    data = ras_info()
     data.T = random.uniform(10, 80)
     data.H = random.uniform(10, 80)
     try:

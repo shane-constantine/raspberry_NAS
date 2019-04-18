@@ -9,96 +9,294 @@ active
 {% endblock %}
 
 {% block header_extends %}
-<script type="text/javascript" language="javascript">
-   		function update() {
-   			$.getJSON("/data/",function(data) {
-                $("#T").html('<span>'+ data[0].T + '</span>');
-                $("#H").html('<span>'+ data[0].H + '</span>');
-                $("#CT").html('<span>'+ data[0].CT + '</span>');
-                $("#CU").html('<span>'+ data[0].CU + '</span>');
-                $("#DT").html('<span>'+ data[0].DT + '</span>');
-                $("#DU").html('<span>'+ data[0].DU + '</span>');
-                $("#DF").html('<span>'+ data[0].DF + '</span>');
-                $("#DP").html('<span>'+ data[0].DP + '</span>');
-                $("#RT").html('<span>'+ data[0].RT + '</span>');
-                $("#RU").html('<span>'+ data[0].RU + '</span>');
-                $("#RF").html('<span>'+ data[0].RF + '</span>');
-                $("#RP").html('<span>'+ data[0].RP + '</span>');
-   			});
-   		}
-   		function timeDown() {
-   			setTimeout(function() {
-   			    update();
-   			    timeDown();
-   		    }, 1000)
-   		}
-   		$(document).ready(function() {
-   			timeDown()
-        });
-</script>
+
 {% endblock %}
 
 {% block content %}
 
-<ul>
-    <li>
-        <span>环境温度：</span>
-        <span id="T">{{ T }}</span>
-    </li>
 
-    <li>
-        <span>环境湿度：</span>
-        <span id="H">{{ H }}</span>
-    </li>
+<div class="container">
+    <div class="panel panel-danger">
+        <div class="panel-heading">
+            环境温湿度
+        </div>
+        <div class="panel-body">
+            <div id="container1" style="min-width:400px;height:180px"></div>
+        </div>
+    </div>
 
-    <li>
-        <span>CPU温度：</span>
-        <span id="CT">{{ CT }}</span>
-    </li>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            CPU使用情况
+        </div>
+        <div class="panel-body">
+            <div id="container3" style="min-width:400px;height:180px"></div>
+        </div>
+    </div>
 
-    <li>
-        <span>CPU使用：</span>
-        <span id="CU">{{ CU }}</span>
-    </li>
+    <div class="panel panel-warning">
+        <div class="panel-heading">
+            内存使用情况
+        </div>
+        <div class="panel-body">
+            <div id="container2" style="min-width:400px;height:180px"></div>
+        </div>
+    </div>
 
-    <li>
-        <span>内存总量:</span>
-        <span id="RT">{{ RT }}</span>
-    </li>
 
-    <li>
-        <span>内存使用：</span>
-        <span id="RU">{{ RU }}</span>
-    </li>
 
-    <li>
-        <span>内存剩余：</span>
-        <span id="RF">{{ RF }}</span>
-    </li>
 
-    <li>
-        <span>内存百分比：</span>
-        <span id="RP">{{ RP }}</span>
-    </li>
+</div>
 
-    <li>
-        <span>硬盘总量：</span>
-        <span id="DT">{{ DT }}</span>
-    </li>
 
-    <li>
-        <span>硬盘使用：</span>
-        <span id="DU">{{ DU }}</span>
-    </li>
+<script>
+var data;
+var data_now;
+$.ajaxSetup({async:false});
+$.getJSON("../data/datas",function(datas) {
+                data = datas
+            });
 
-    <li>
-        <span>硬盘剩余：</span>
-        <span id="DF">{{ DF }}</span>
-    </li>
 
-    <li>
-        <span>硬盘百分比：</span>
-        <span id="DP">{{ DP }}</span>
-    </li>
-</ul>
+Highcharts.setOptions({
+	global: {
+		useUTC: false
+	}
+});
+
+function activeLastPointToolip(chart) {
+	var points = chart.series[0].points;
+	chart.tooltip.refresh(points[points.length -1]);
+}
+
+
+Highcharts.chart('container1', {
+	chart: {
+		type: 'spline',
+		marginRight: 10,
+		events: {
+			load: function () {
+				var series1 = this.series[0],
+                    series2 = this.series[1],
+					chart = this;
+				activeLastPointToolip(chart);
+				setInterval(function () {
+				    $.ajaxSetup({async:false});
+                    $.getJSON("../data/data_now",function(data) {
+                                    data_now = data
+                                });
+					var x = (new Date()).getTime(); // 当前时间
+					series1.addPoint([x, data_now[0].T], true, true);
+					series2.addPoint([x, data_now[0].H], true, true);
+					activeLastPointToolip(chart);
+
+				}, 1000);
+			}
+		}
+	},
+	title: {
+		text: null
+	},
+	xAxis: {
+		type: 'datetime',
+		tickPixelInterval: 3
+	},
+	yAxis: {
+	    tickPixelInterval: 5,
+		title: {
+			text: null
+		}
+	},
+	tooltip: {
+		formatter: function () {
+			return '<b>' + Highcharts.numberFormat(this.y, 2) + '</b>';
+		}
+	},
+	legend: {
+		enabled: false
+	},
+	series: [
+	    {
+            name: '温度数据',
+            data: (
+                    function () {
+                        var datas = [],
+                            time = (new Date()).getTime(),
+                            i;
+                        for (i = -200; i < 0; i += 1) {
+                            datas.push({
+                                x: time + i * 1000,
+                                y: data[i+200].T
+
+                            });
+                            }
+
+                        // 生成随机值
+                        return datas;
+                    }()
+            )
+	    },
+	    {
+            name: '湿度数据',
+            data: (
+                    function () {
+                        var datas = [],
+                            time = (new Date()).getTime(),
+                            i;
+                        for (i = -200; i < 0; i += 1) {
+                            datas.push({
+                                x: time + i * 1000,
+                                y: data[i+200].H
+
+                            });
+                            }
+
+                        // 生成随机值
+                        return datas;
+                    }()
+            )
+	    }
+	]
+
+});
+
+
+Highcharts.chart('container2', {
+	chart: {
+		type: 'spline',
+		marginRight: 10,
+		events: {
+			load: function () {
+				var series1 = this.series[0],
+					chart = this;
+				activeLastPointToolip(chart);
+				setInterval(function () {
+				    $.ajaxSetup({async:false});
+                    $.getJSON("../data/data_now",function(data) {
+                                    data_now = data
+                                });
+					var x = (new Date()).getTime(); // 当前时间
+					series1.addPoint([x, data_now[0].CU], true, true);
+					activeLastPointToolip(chart);
+
+				}, 1000);
+			}
+		}
+	},
+	title: {
+		text: null
+	},
+	xAxis: {
+		type: 'datetime',
+		tickPixelInterval: 3
+	},
+	yAxis: {
+	    tickPixelInterval: 5,
+		title: {
+			text: null
+		}
+	},
+	tooltip: {
+		formatter: function () {
+			return '<b>' + Highcharts.numberFormat(this.y, 2) + '</b>';
+		}
+	},
+	legend: {
+		enabled: false
+	},
+	series: [
+	    {
+            name: 'CPU数据',
+            data: (
+                    function () {
+                        var datas = [],
+                            time = (new Date()).getTime(),
+                            i;
+                        for (i = -200; i < 0; i += 1) {
+                            datas.push({
+                                x: time + i * 1000,
+                                y: data[i+200].CU
+
+                            });
+                            }
+
+                        // 生成随机值
+                        return datas;
+                    }()
+            )
+	    }
+	]
+
+});
+
+
+Highcharts.chart('container3', {
+	chart: {
+		type: 'spline',
+		marginRight: 10,
+		events: {
+			load: function () {
+				var series1 = this.series[0],
+					chart = this;
+				activeLastPointToolip(chart);
+				setInterval(function () {
+				    $.ajaxSetup({async:false});
+                    $.getJSON("../data/data_now",function(data) {
+                                    data_now = data
+                                });
+					var x = (new Date()).getTime(); // 当前时间
+					series1.addPoint([x, data_now[0].RU], true, true);
+					activeLastPointToolip(chart);
+
+				}, 1000);
+			}
+		}
+	},
+	title: {
+		text: null
+	},
+	xAxis: {
+		type: 'datetime',
+		tickPixelInterval: 3
+	},
+	yAxis: {
+	    tickPixelInterval: 5,
+		title: {
+			text: null
+		}
+	},
+	tooltip: {
+		formatter: function () {
+			return '<b>' + Highcharts.numberFormat(this.y, 2) + '</b>';
+		}
+	},
+	legend: {
+		enabled: false
+	},
+	series: [
+	    {
+            name: '内存数据',
+            data: (
+                    function () {
+                        var datas = [],
+                            time = (new Date()).getTime(),
+                            i;
+                        for (i = -200; i < 0; i += 1) {
+                            datas.push({
+                                x: time + i * 1000,
+                                y: data[i+200].RU
+
+                            });
+                            }
+
+                        // 生成随机值
+                        return datas;
+                    }()
+            )
+	    }
+	]
+
+});
+</script>
+
 {% endblock%}

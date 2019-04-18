@@ -7,21 +7,19 @@
 {% block header_extends %}
 <script type="text/javascript" language="javascript">
    		function update() {
-   			$.getJSON("/data/",function(data) {
-                $("#T").html('<span>'+ data[0].T + '</span>');
-                $("#H").html('<span>'+ data[0].H + '</span>');
-
-                $("#CT").html('<span>'+ data[0].CT + '</span>');
-                $("#CU").html('<span>'+ data[0].CU + '</span>');
-
-                $("#DT").html('<span>'+ data[0].DT + '</span>');
-                $("#DU").html('<span>'+ data[0].DU + '</span>');
-                $("#DF").html('<span>'+ data[0].DF + '</span>');
-                $("#DP").html('<span>'+ data[0].DP + '</span>');
-                $("#RT").html('<span>'+ data[0].RT + '</span>');
-                $("#RU").html('<span>'+ data[0].RU + '</span>');
-                $("#RF").html('<span>'+ data[0].RF + '</span>');
-                $("#RP").html('<span>'+ data[0].RP + '</span>');
+   			$.getJSON("data/data_now",function(data) {
+                $("#T").html('<span>'+ data[0].T.toFixed(2) + '</span>');
+                $("#H").html('<span>'+ data[0].H.toFixed(2) + '</span>');
+                $("#CT").html('<span>'+ data[0].CT.toFixed(2) + '</span>');
+                $("#CU").html('<span>'+ data[0].CU.toFixed(2) + '</span>');
+                $("#DT").html('<span>'+ data[0].DT.toFixed(2) + '</span>');
+                $("#DU").html('<span>'+ data[0].DU.toFixed(2) + '</span>');
+                $("#DF").html('<span>'+ data[0].DF.toFixed(2) + '</span>');
+                $("#DP").html('<span>'+ data[0].DP.toFixed(2) + '</span>');
+                $("#RT").html('<span>'+ data[0].RT.toFixed(2) + '</span>');
+                $("#RU").html('<span>'+ data[0].RU.toFixed(2) + '</span>');
+                $("#RF").html('<span>'+ data[0].RF.toFixed(2) + '</span>');
+                $("#RP").html('<span>'+ data[0].RP.toFixed(2) + '</span>');
    			});
    		}
    		function timeDown() {

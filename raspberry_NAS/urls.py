@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from . import views
-from ras_data.views import data_detail,data
+from ras_data.views import data_detail,data,datas_json
 from files_manage.views import files_page,upload_ajax,download_file,delete_file
 from apscheduler.scheduler import Scheduler
 from . import timer_tasks
@@ -26,8 +26,8 @@ sched = Scheduler()
 
 @sched.interval_schedule(seconds=1)
 def my_task():
-    timer_tasks.get_data()
-    #pass
+    #timer_tasks.get_data()
+    pass
 sched.start()
 
 
@@ -36,7 +36,8 @@ urlpatterns = [
     path('',views.index, name="home"),
     path('sysdata/', data_detail, name="data_page"),
     path('files/', files_page, name="files_page"),
-    path('data/',data),
+    path('data/data_now',data),
+    path('data/datas',datas_json),
     path('upload/',upload_ajax),
     path('download/<int:pk>',download_file,name="download"),
     path('delete/<int:pk>', delete_file, name="delete"),

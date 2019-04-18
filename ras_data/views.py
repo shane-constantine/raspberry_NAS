@@ -12,18 +12,18 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 def data(request):
     data = ras_info.objects.all()[0]
     ajson = []
-    ajson.append({"T":str(data.T),
-                  "H":str(data.H),
-                  "CT":str(data.CT),
-                  "CU": str(data.CU),
-                  "DT": str(data.DT),
-                  "DF": str(data.DF),
-                  "DU": str(data.DU),
-                  "DP": str(data.DP),
-                  "RT": str(data.RT),
-                  "RF": str(data.RF),
-                  "RU": str(data.RU),
-                  "RP": str(data.RP),
+    ajson.append({"T":data.T,
+                  "H":data.H,
+                  "CT":data.CT,
+                  "CU":data.CU,
+                  "DT":data.DT,
+                  "DF":data.DF,
+                  "DU":data.DU,
+                  "DP":data.DP,
+                  "RT":data.RT,
+                  "RF":data.RF,
+                  "RU":data.RU,
+                  "RP":data.RP,
                   })
     djson = json.dumps(ajson)
     response = HttpResponse()
@@ -44,4 +44,62 @@ def data_detail(request):
     context['RU'] = random.uniform(10, 80)
     context['RF'] = random.uniform(10, 80)
     context['RP'] = random.uniform(10, 80)
+    context['CU'] = random.uniform(10, 80)
     return render(request,"data_page/ras_data.html",context)
+
+def datas_json(request):
+    ajson = []
+    number = ras_info.objects.all().count()
+    if number >= 200:
+        datas = ras_info.objects.all().reverse()[0:200]
+        for data in datas:
+            ajson.append({"T": data.T,
+                          "H": data.H,
+                          "CT": data.CT,
+                          "CU": data.CU,
+                          "DT": data.DT,
+                          "DF": data.DF,
+                          "DU": data.DU,
+                          "DP": data.DP,
+                          "RT": data.RT,
+                          "RF": data.RF,
+                          "RU": data.RU,
+                          "RP": data.RP,
+                          })
+        ajson.reverse()
+    else:
+        zer = 200 - number
+        for i in range(0,zer):
+            ajson.append({"T": 0,
+                          "H": 0,
+                          "CT": 0,
+                          "CU": 0,
+                          "DT": 0,
+                          "DF": 0,
+                          "DU": 0,
+                          "DP": 0,
+                          "RT": 0,
+                          "RF": 0,
+                          "RU": 0,
+                          "RP": 0,
+                          })
+        datas = ras_info.objects.all()
+        for data in datas:
+            ajson.append({"T": data.T,
+                          "H": data.H,
+                          "CT": data.CT,
+                          "CU": data.CU,
+                          "DT": data.DT,
+                          "DF": data.DF,
+                          "DU": data.DU,
+                          "DP": data.DP,
+                          "RT": data.RT,
+                          "RF": data.RF,
+                          "RU": data.RU,
+                          "RP": data.RP,
+                          })
+    djson = json.dumps(ajson)
+    response = HttpResponse()
+    response['Content-Type'] = "text/javascript"
+    response.write(djson)
+    return response

@@ -14,4 +14,4 @@ class ras_info(models.Model):
     RU = models.FloatField(max_length=255, default=0)
     RF = models.FloatField(max_length=255, default=0)
     RP = models.FloatField(max_length=255, default=0)
-
+    upload_date = models.DateField(auto_now_add=True)
