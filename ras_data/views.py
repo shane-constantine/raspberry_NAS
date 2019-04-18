@@ -10,7 +10,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def data(request):
-    data = ras_info.objects.all().reverse()[0]
+    # data = ras_info.objects.order_by("-upload_date")[0]
+    data = ras_info.objects.all().last()
     ajson = []
     ajson.append({"T":data.T,
                   "H":data.H,
@@ -51,7 +52,7 @@ def datas_json(request):
     ajson = []
     number = ras_info.objects.all().count()
     if number >= 200:
-        datas = ras_info.objects.all().reverse()[0:200]
+        datas = ras_info.objects.all().order_by('-pk')[0:200]
         for data in datas:
             ajson.append({"T": data.T,
                           "H": data.H,
@@ -66,7 +67,7 @@ def datas_json(request):
                           "RU": data.RU,
                           "RP": data.RP,
                           })
-        ajson.reverse()
+
     else:
         zer = 200 - number
         for i in range(0,zer):
@@ -98,6 +99,7 @@ def datas_json(request):
                           "RU": data.RU,
                           "RP": data.RP,
                           })
+    ajson.reverse()
     djson = json.dumps(ajson)
     response = HttpResponse()
     response['Content-Type'] = "text/javascript"
