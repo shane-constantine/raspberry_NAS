@@ -38,6 +38,11 @@ def getDisk():
     # 'Disk Used  space is %s ' % DISK[1] + 'and is %s' % DISK[3]
     # print
     # 'Disk Free  space is %s ' % DISK[2]
+    print('/n/n/n/n/n')
+    print('/n/n/n/n/n')
+    print(DISK)
+    print('/n/n/n/n/n')
+    print('/n/n/n/n/n')
     return DISK
 
 def get_data():

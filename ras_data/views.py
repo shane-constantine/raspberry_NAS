@@ -10,7 +10,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def data(request):
-    data = ras_info.objects.all()[0]
+    data = ras_info.objects.all().reverse()[0]
     ajson = []
     ajson.append({"T":data.T,
                   "H":data.H,

@@ -26,8 +26,8 @@ sched = Scheduler()
 
 @sched.interval_schedule(seconds=1)
 def my_task():
-    #timer_tasks.get_data()
-    pass
+    timer_tasks.get_data()
+    #pass
 sched.start()
 
 
