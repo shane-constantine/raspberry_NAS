@@ -61,10 +61,10 @@ def get_data():
 
     try:
         disk = getDisk()
-        data.DT = disk[0]
-        data.DU = disk[1]
-        data.DF = disk[2]
-        data.DP = disk[3]
+        data.DT = float(disk[0][0:-1])
+        data.DU = float(disk[1][0:-1])
+        data.DF = float(disk[2][0:-1])
+        data.DP = float(disk[3][0:-1])
     except:
         data.DT = random.uniform(10, 80)
         data.DU = random.uniform(10, 80)
