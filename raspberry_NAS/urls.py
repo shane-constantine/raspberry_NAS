@@ -24,7 +24,7 @@ from . import timer_tasks
 sched = Scheduler()
 
 
-@sched.interval_schedule(seconds=1)
+@sched.interval_schedule(seconds=2)
 def my_task():
     timer_tasks.get_data()
     #pass

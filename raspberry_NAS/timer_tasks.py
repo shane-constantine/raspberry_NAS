@@ -2,6 +2,11 @@ import random
 import os
 import time
 from ras_data.models import ras_info
+import Adafruit_DHT
+from w1thermsensor import W1ThermSensor
+
+sensor1 = Adafruit_DHT.DHT11
+sensor2 = W1ThermSensor(W1ThermSensor.THERM_SENSOR_DS18B20, "03059779864b")
 
 def getCPUtemp():
     temp = os.popen('vcgencmd measure_temp').readline()
@@ -42,8 +47,10 @@ def getDisk():
 
 def get_data():
     data = ras_info()
-    data.T = random.uniform(10, 80)
-    data.H = random.uniform(10, 80)
+    humidity, temperature = Adafruit_DHT.read_retry(sensor1, 26)
+    temperature = sensor2.get_temperature()
+    data.T = temperature
+    data.H = humidity
     try:
         data.CT = getCPUtemp()
     except:
